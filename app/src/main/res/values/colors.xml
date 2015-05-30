@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue_ligth">#2A8DD4</color>
+    <color name="blue_water">#0080FF</color>
+    <color name="red">#F00</color>
+    <color name="blue">#00F</color>
+    <color name="black">#000</color>
+    <color name="green">#FF00FF00</color>
+    <color name="white">#FFF</color>
+    <color name="gray">#FFD6D6D6</color>
+    <color name="gray_ligth">#FFF6F6F6</color>
+    <color name="orange">#a84929</color>
+    <color name="orange_ligth">#cb5e31</color>
+    <color name="yellow">#FDD017</color>
+    <color name="gray_dark">#848484</color>
+    <color name="gray_midle">#E6E6E6</color>
+</resources>
