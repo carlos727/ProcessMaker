@@ -39,6 +39,8 @@ public class Steps extends ActionBarActivity {
     private DataStep step;
     private String id;
     private ArrayList<DataStep> listSteps;
+    private ArrayList<DataField> listFields;
+    private ArrayList<DataBranch> listBranchs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class Steps extends ActionBarActivity {
 
         id = (String)getIntent().getExtras().getSerializable("step");
         listSteps = (ArrayList<DataStep>)getIntent().getExtras().getSerializable("steps");
+        listFields = new ArrayList<>();
+        listBranchs = new ArrayList<>();
 
         mTextView1 = (TextView)findViewById(R.id.title);
         mLinearLayout = (LinearLayout)findViewById(R.id.content);
@@ -79,10 +83,11 @@ public class Steps extends ActionBarActivity {
                 mLinearLayout.addView(question);
 
                 int type = Integer.parseInt(fields.getJSONObject(j).getString("field_type"));
+
+                String list_values[] = null;
                 if (type == 0 || type == 1) {
                     JSONArray values = fields.getJSONObject(j).getJSONArray("possible_values");
-                    String list_values[] = new String[values.length()];
-                    //ArrayList<String> list_values = new ArrayList<>();
+                    list_values = new String[values.length()];
                     for (int k = 0; k < values.length(); k++){
                         list_values[k] = values.getString(k);
                     }
@@ -121,7 +126,32 @@ public class Steps extends ActionBarActivity {
                     else
                         break;
                 }
+
+                DataField df = new DataField();
+                df.setId(fields.getJSONObject(j).getString("id"));
+                df.setCaption(caption);
+                df.setType(type);
+                df.setPossible_values(list_values);
+
+                listFields.add(df);
             }
+
+            for (int j = 0; j < decisions.length(); j++){
+                String go_to = decisions.getJSONObject(j).getString("go_to_step");
+
+                JSONArray branch = decisions.getJSONObject(j).getJSONArray("branch");
+                for (int k = 0; k < branch.length(); k++){
+                    JSONObject jo = branch.getJSONObject(k);
+
+                    DataBranch db = new DataBranch();
+                    db.setField_id(jo.getString("field_id"));
+                    db.setType(jo.getString("comparison_type"));
+                    db.setValue(jo.getString("value"));
+                    db.setGo_to_step(go_to);
+                    listBranchs.add(db);
+                }
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -151,6 +181,10 @@ public class Steps extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
+
+    }
+
+    public void nextStep(View view){
 
     }
 }
