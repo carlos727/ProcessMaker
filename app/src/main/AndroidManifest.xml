@@ -31,6 +31,10 @@
             android:name=".Procedure"
             android:label="@string/title_activity_procedure" >
         </activity>
+        <activity
+            android:name=".Congratulation"
+            android:label="@string/title_activity_congratulation" >
+        </activity>
     </application>
 
 </manifest>

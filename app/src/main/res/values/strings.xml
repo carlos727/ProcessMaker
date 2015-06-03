@@ -7,5 +7,6 @@
     <string name="title_activity_procedures">Procedures</string>
     <string name="title_activity_steps">Steps</string>
     <string name="title_activity_procedure">Procedure</string>
+    <string name="title_activity_congratulation">Congratulation</string>
 
 </resources>

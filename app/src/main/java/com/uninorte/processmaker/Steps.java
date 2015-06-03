@@ -8,11 +8,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import javax.xml.datatype.Duration;
 
 public class Steps extends ActionBarActivity {
 
@@ -70,10 +74,12 @@ public class Steps extends ActionBarActivity {
                 question.setText(caption);
                 question.setGravity(Gravity.CENTER_HORIZONTAL);
                 question.setTextSize(20);
+                question.setPadding(5,70,5,15);
+
                 mLinearLayout.addView(question);
 
                 int type = Integer.parseInt(fields.getJSONObject(j).getString("field_type"));
-                if (type != 3) {
+                if (type == 0 || type == 1) {
                     JSONArray values = fields.getJSONObject(j).getJSONArray("possible_values");
                     String list_values[] = new String[values.length()];
                     //ArrayList<String> list_values = new ArrayList<>();
@@ -85,10 +91,35 @@ public class Steps extends ActionBarActivity {
                             android.R.layout.simple_spinner_item, list_values);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                    Spinner answer = new Spinner(getApplicationContext());
+                    final Spinner answer = new Spinner(getApplicationContext());
                     answer.setAdapter(adapter);
+                    answer.setBackgroundColor(getResources().getColor(R.color.blue_ligth));
+                    answer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            Toast.makeText(getApplicationContext(), answer.getSelectedItem().toString() ,Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                            Toast.makeText(getApplicationContext(), answer.getSelectedItem().toString() ,Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                     mLinearLayout.addView(answer);
+                }
+                else {
+                    if (type == 2){
+                        EditText answer = new EditText(getApplicationContext());
+                        answer.setGravity(Gravity.CENTER_HORIZONTAL);
+                        answer.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        answer.setBackgroundColor(getResources().getColor(R.color.blue_ligth));
+                        answer.setTextColor(getResources().getColor(R.color.white));
+                        answer.setSelectAllOnFocus(true);
+                        mLinearLayout.addView(answer);
+                    }
+                    else
+                        break;
                 }
             }
         } catch (JSONException e) {

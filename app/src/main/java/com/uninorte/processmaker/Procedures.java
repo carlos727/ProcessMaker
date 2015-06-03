@@ -106,9 +106,9 @@ public class Procedures extends ActionBarActivity {
         boolean isNetworkAvaible = false;
         if (networkInfo != null && networkInfo.isConnected()) {
             isNetworkAvaible = true;
-            Toast.makeText(this, "Network is available ", Toast.LENGTH_LONG) .show();
+            Toast.makeText(this, "Network is available ", Toast.LENGTH_SHORT) .show();
         } else {
-            Toast.makeText(this, "Network isn't available ", Toast.LENGTH_LONG) .show();
+            Toast.makeText(this, "Network isn't available ", Toast.LENGTH_SHORT) .show();
         }
         return isNetworkAvaible;
     }
