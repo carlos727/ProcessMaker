@@ -131,7 +131,7 @@ public class Procedure extends ActionBarActivity {
                         DataStep ds = new DataStep();
                         ds.setProcedure_id(j.getString("procedure_id"));
                         ds.setStep_number(j.getString("step_id"));
-                        ds.setContent(/*j.getString("content")*/"something");
+                        ds.setContent(j.getString("content"));
                         listSteps.add(ds);
                     }
                 } catch (JSONException e) {

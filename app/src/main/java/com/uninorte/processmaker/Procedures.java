@@ -95,6 +95,11 @@ public class Procedures extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
@@ -112,6 +117,8 @@ public class Procedures extends ActionBarActivity {
         if (isNetworkAvailable())
             new GetData().execute();
     }
+
+
 
     private class GetData extends AsyncTask<Void, Void, Void> {
 

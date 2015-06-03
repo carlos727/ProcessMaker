@@ -9,11 +9,16 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +31,6 @@ import java.util.ArrayList;
 public class Steps extends ActionBarActivity {
 
     private TextView mTextView1;
-    private TextView mTextView2;
     private LinearLayout mLinearLayout;
     private DataStep step;
     private String id;
@@ -41,7 +45,7 @@ public class Steps extends ActionBarActivity {
         listSteps = (ArrayList<DataStep>)getIntent().getExtras().getSerializable("steps");
 
         mTextView1 = (TextView)findViewById(R.id.title);
-        mTextView2 = (TextView)findViewById(R.id.question);
+        mLinearLayout = (LinearLayout)findViewById(R.id.content);
 
         int i = 0;
         boolean sw = false;
@@ -55,8 +59,41 @@ public class Steps extends ActionBarActivity {
         }
 
         mTextView1.setText("Paso "+ step.getStep_number());
-        mTextView2.setText(step.getContent());
+        String s = step.getContent();
+        try {
+            JSONObject content = new JSONObject(s);
+            JSONArray fields = content.getJSONArray("Fields");
+            JSONArray decisions = content.getJSONArray("Decisions");
+            for (int j = 0; j < fields.length(); j++) {
+                String caption = fields.getJSONObject(j).getString("caption");
+                TextView question = new TextView(getApplicationContext());
+                question.setText(caption);
+                question.setGravity(Gravity.CENTER_HORIZONTAL);
+                question.setTextSize(20);
+                mLinearLayout.addView(question);
 
+                int type = Integer.parseInt(fields.getJSONObject(j).getString("field_type"));
+                if (type != 3) {
+                    JSONArray values = fields.getJSONObject(j).getJSONArray("possible_values");
+                    String list_values[] = new String[values.length()];
+                    //ArrayList<String> list_values = new ArrayList<>();
+                    for (int k = 0; k < values.length(); k++){
+                        list_values[k] = values.getString(k);
+                    }
+
+                    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this,
+                            android.R.layout.simple_spinner_item, list_values);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    Spinner answer = new Spinner(getApplicationContext());
+                    answer.setAdapter(adapter);
+
+                    mLinearLayout.addView(answer);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -81,5 +118,8 @@ public class Steps extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 }
