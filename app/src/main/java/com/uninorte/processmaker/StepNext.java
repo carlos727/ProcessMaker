@@ -1,21 +1,13 @@
 package com.uninorte.processmaker;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethod;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,9 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import javax.xml.datatype.Duration;
-
-public class Steps extends ActionBarActivity {
+public class StepNext extends ActionBarActivity {
 
     private TextView mTextView1;
     private LinearLayout mLinearLayout;
@@ -107,12 +97,12 @@ public class Steps extends ActionBarActivity {
                     answer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            //Toast.makeText(getApplicationContext(), answer.getSelectedItem().toString() ,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), answer.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
-                            //Toast.makeText(getApplicationContext(), answer.getSelectedItem().toString() ,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), answer.getSelectedItem().toString() ,Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -196,7 +186,6 @@ public class Steps extends ActionBarActivity {
     }
 
     public void nextStep(View view){
-        listBranchInfo.clear();
 
         if (listBranchs.size() == 1){
             Branch b = listBranchs.get(0);
@@ -231,44 +220,34 @@ public class Steps extends ActionBarActivity {
                         }
                     }
                     else {
-                        float v = Float.parseFloat(db.getValue());
-                        float p = Float.parseFloat(parameter);
 
-                        if (db.getType().equals("<")){
-                            if (v < p)
-                                sw = true;
-                        }
-                        else {
-                            if (v > p)
-                                sw = true;
-                        }
                     }
                     i++;
                 }
 
                 if (!sw){
                     if (!b.getGo_to_step().equals("-1")) {
-                        Intent intent = new Intent(Steps.this, Steps.class);
+                        Intent intent = new Intent(StepNext.this, Steps.class);
                         intent.putExtra("steps", listSteps);
                         intent.putExtra("step", b.getGo_to_step());
                         startActivity(intent);
                     }
                     else {
-                        Intent intent = new Intent(Steps.this, Congratulation.class);
+                        Intent intent = new Intent(StepNext.this, Congratulation.class);
                         startActivity(intent);
                     }
                 }
                 else {
-                    Toast.makeText(this,"Don't have an associated step",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Don't have an asociated step",Toast.LENGTH_SHORT).show();
                 }
             }
             else {
                 if(b.getGo_to_step().equals("-1")){
-                    Intent intent = new Intent(Steps.this,Congratulation.class);
+                    Intent intent = new Intent(StepNext.this,Congratulation.class);
                     startActivity(intent);
                 }
                 else {
-                    Intent intent = new Intent(Steps.this,Steps.class);
+                    Intent intent = new Intent(StepNext.this,Steps.class);
                     intent.putExtra("steps",listSteps);
                     intent.putExtra("step",b.getGo_to_step());
                     startActivity(intent);
@@ -281,30 +260,25 @@ public class Steps extends ActionBarActivity {
             String step = "-1";
             ArrayList<String> parameters = parameters(mLinearLayout);
             while (i < listBranchs.size() && !sw){
-                listBranchInfo.clear();
                 Branch b = listBranchs.get(i);
 
-                step = b.getGo_to_step();
-
                 JSONArray jsonArray = b.getBranch();
-                for (int j = 0; j < jsonArray.length(); j++) {
-                    DataBranch db = new DataBranch();
-
+                for (int j = 0; j < jsonArray.length(); j++){
                     try {
-                        JSONObject jo = jsonArray.getJSONObject(j);
-                        db.setField_id(jo.getInt("field_id"));
-                        db.setType(jo.getString("comparison_type"));
-                        db.setValue(jo.getString("value"));
+                        JSONObject jsonObject = jsonArray.getJSONObject(j);
+                        DataBranch db = new DataBranch();
+                        db.setField_id(jsonObject.getInt("field_id"));
+                        db.setType(jsonObject.getString("comparison_type"));
+                        db.setValue(jsonObject.getString("value"));
+                        listBranchInfo.add(db);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    listBranchInfo.add(db);
                 }
 
                 int j = 0;
                 boolean sv = false;
-                while (j < parameters.size() && !sv){
+                while (j < parameters.size() && !sw){
                     String parameter = parameters.get(j);
 
                     DataBranch db = listBranchInfo.get(j);
@@ -313,43 +287,26 @@ public class Steps extends ActionBarActivity {
                             sv = true;
                         }
                     }
-                    else {
-                        float v = Float.parseFloat(db.getValue());
-                        float p = Float.parseFloat(parameter);
 
-                        if (db.getType().equals("<")){
-                            if (v < p)
-                                sv = true;
-                        }
-                        else {
-                            if (v > p)
-                                sv = true;
-                        }
-                    }
-                    j++;
+                    i++;
                 }
 
                 if(!sv){
                     sw = true;
+                    step = b.getGo_to_step();
                 }
-                i++;
             }
 
             if (!sw){
-                Toast.makeText(this,"Don't have an associated step",Toast.LENGTH_SHORT).show();
+
             }
             else {
-                if(step.equals("-1")){
-                    Intent intent = new Intent(Steps.this,Congratulation.class);
-                    startActivity(intent);
-                }
-                else {
-                    Intent intent = new Intent(Steps.this,Steps.class);
-                    intent.putExtra("steps",listSteps);
-                    intent.putExtra("step",step);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(StepNext.this, Steps.class);
+                intent.putExtra("steps",listSteps);
+                intent.putExtra("step",step);
+                startActivity(intent);
             }
         }
     }
 }
+

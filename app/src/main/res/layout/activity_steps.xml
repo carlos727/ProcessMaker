@@ -82,7 +82,8 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="0"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:onClick="nextStep"/>
 
     </LinearLayout>
 

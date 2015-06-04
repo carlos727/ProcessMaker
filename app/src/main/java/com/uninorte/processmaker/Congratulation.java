@@ -38,10 +38,4 @@ public class Congratulation extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        this.finish();
-        Intent intent = new Intent(Congratulation.this,Categories.class);
-        startActivity(intent);
-    }
 }
